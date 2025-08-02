@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface  TodoDao {
@@ -18,5 +18,5 @@ interface  TodoDao {
     suspend fun update(todo: Todo)
 
     @Query("SELECT * FROM TODO_TB")
-    suspend fun getAll(): List<Todo>
+    fun getAll(): Flow<List<Todo>>
 }

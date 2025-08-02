@@ -11,6 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.todoapp.todolist.Room.Repository.TodoRepository
+import com.example.todoapp.todolist.Room.ToDoDatabase
+import com.example.todoapp.todolist.todoVM
 import com.example.todoapp.ui.theme.ToDoAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,12 +22,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ToDoAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                val db = ToDoDatabase.ToDoDatabase(applicationContext)
+                val todoDao = db.todoDao()
+                val repository = TodoRepository(todoDao)
+                val viewModel = todoVM(repository)
             }
         }
     }

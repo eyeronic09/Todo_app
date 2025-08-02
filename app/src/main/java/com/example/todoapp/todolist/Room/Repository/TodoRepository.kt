@@ -14,5 +14,20 @@ interface Repository{
 
 
 class TodoRepository(private val todoDao: TodoDao): Repository {
+    override  fun getAll(): Flow<List<Todo>> {
+        return todoDao.getAll()
+    }
+
+    override suspend fun insert(todo: Todo) {
+      return  todoDao.insert(todo)
+    }
+
+    override suspend fun delete(todo: Todo) {
+       return todoDao.delete(todo)
+    }
+
+    override suspend fun update(todo: Todo) {
+       return todoDao.update(todo)
+    }
 
 }
