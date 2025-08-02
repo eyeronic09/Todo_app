@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    kotlin("kapt")
 }
 
 android {
@@ -41,12 +42,26 @@ android {
 
 dependencies {
     val room_version = "2.7.2"
+
     implementation("androidx.room:room-runtime:$room_version")
+
+    // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
+    // See Add the KSP plugin to your project
+    kapt("androidx.room:room-compiler:$room_version")
+
+    // If this project only uses Java source, use the Java annotationProcessor
+    // No additional plugins are necessary
     annotationProcessor("androidx.room:room-compiler:$room_version")
+
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3") // Or latest
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3") // Or latest
     implementation("androidx.activity:activity-compose:1.9.0")
+
+    implementation ("com.google.dagger:hilt-android:2.48")
+
+    // For ViewModel + Hilt
+    implementation ("androidx.hilt:hilt-navigation-compose:1.1.0")
 
 
     implementation(libs.androidx.core.ktx)
