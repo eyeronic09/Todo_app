@@ -1,5 +1,6 @@
 package com.example.todoapp.todolist
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.todolist.Room.Repository.TodoRepository
@@ -21,14 +22,36 @@ class todoVM(private val TodoRepository: TodoRepository): ViewModel() {
     private val _editingTodo = MutableStateFlow<Todo?>(null)
     val editingTodo: StateFlow<Todo?> = _editingTodo.asStateFlow()
 
+
+    fun updateTodoText(text: String) {
+        _textTitle.value = text
+    }
+
+
     fun startEditing(todo: Todo) {
         _editingTodo.value = todo
         _textTitle.value = todo.title
     }
 
+    fun saveOrUpdateTask() {
+        val title = _textTitle.value
+        if (title.isNotBlank()) {
+            val updateTask = _editingTodo.value?.copy(title = title) ?: Todo(title = title)
+            updateTask(updateTask)
+            _editingTodo.value = null
+        }
+    }
 
-    fun updateTodoText(text: String) {
-        _textTitle.value = text
+    private fun updateTask(newTodo: Todo) {
+        viewModelScope.launch {
+            TodoRepository.update(newTodo)
+        }
+    }
+
+    fun addTask(todo: Todo) {
+        viewModelScope.launch {
+            TodoRepository.insert(todo)
+        }
     }
     init {
         viewModelScope.launch {
@@ -36,11 +59,6 @@ class todoVM(private val TodoRepository: TodoRepository): ViewModel() {
                 _todoList.value = it
 
             }
-        }
-    }
-    fun addTask(todo: Todo) {
-        viewModelScope.launch {
-            TodoRepository.insert(todo)
         }
     }
 
