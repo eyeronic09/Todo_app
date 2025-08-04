@@ -1,6 +1,7 @@
     package com.example.todoapp.todolist
 
 import android.util.Log
+import android.widget.CheckBox
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -38,14 +39,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todoapp.todolist.Room.Repository.TodoRepository
 import com.example.todoapp.todolist.Room.Todo
-import com.example.todoapp.todolist.component.AlertDialogExample
+import com.example.todoapp.todolist.component.CardItem
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoScreen(repository: TodoRepository) {
     val factory = remember  { TodoVMFactory(repository) }
@@ -68,70 +71,44 @@ fun TodoScreen(repository: TodoRepository) {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            TextField(
-                value = todoTitle,
-                onValueChange = { viewModel.updateTodoText(it) },
-                label = { Text("enter your task") }
-            )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Row {
+                TextField(
+                    value = todoTitle,
+                    onValueChange = { viewModel.updateTodoText(it) },
+                    label = { Text("enter your task") }
+                )
 
-            // Save/Update button
-            Button(
-                onClick = {
-                    if (editingTodo != null) {
-                        viewModel.saveOrUpdateTask()
-                    }else{
-                        viewModel.addTask(Todo(title = todoTitle))
-                    }
-                },
-            ) {
-                Text(if (editingTodo != null) "Update" else "Add")
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = {
+                        if (editingTodo != null) {
+                            viewModel.saveOrUpdateTask()
+                        }else{
+                            viewModel.addTask(Todo(title = todoTitle))
+                        }
+                    },
+                ) {
+                    Text(if (editingTodo != null) "Update" else "Add")
+                }
+
             }
 
             Spacer(modifier = Modifier.height(16.dp))
+
             Log.d("TodoScreen", "editingTodo: $editingTodo")
 
-
-
-            // Todo list
             LazyColumn {
                 items(todos) { todo ->
-                    OutlinedCard(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = todo.title,
-                                modifier = Modifier.weight(1f)
-                            )
-                            Row(
-                                modifier = Modifier.padding(start = 8.dp)
-                            ) {
-                                IconButton(onClick = { viewModel.deleteTask(todo) }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Delete,
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-                            IconButton(onClick = { viewModel.startEditing(todo) }) {
-                                Icon(
-                                    imageVector = Icons.Default.Edit,
-                                    contentDescription = null
-                                )
-                            }
-                        }
-                    }
+                    CardItem(
+                        todo = todo,
+                        onDelete = { viewModel.deleteTask(todo) },
+                        onEdit = { viewModel.startEditing(todo) },
+                        onDone = { viewModel.isCheckboxChecked(todo) }
+                    )
                 }
             }
+            Log.d("ListTest", "editingTodo: $todos")
         }
     }
 }

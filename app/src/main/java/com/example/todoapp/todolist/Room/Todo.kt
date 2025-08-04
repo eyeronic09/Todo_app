@@ -10,5 +10,5 @@ data class Todo(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
     var title: String,
-    val isDone: Boolean = false
+    var isDone: Boolean = false
 )

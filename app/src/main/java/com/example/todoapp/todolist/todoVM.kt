@@ -34,17 +34,25 @@ class todoVM(private val TodoRepository: TodoRepository): ViewModel() {
         _textTitle.value = todo.title
     }
 
+
+    fun isCheckboxChecked(todo: Todo){
+        viewModelScope.launch {
+            val updatedTodo = todo.copy(isDone = !todo.isDone)
+            TodoRepository.update(updatedTodo)
+        }
+
+    }
+
     fun saveOrUpdateTask() {
         val title = _textTitle.value
         if (title.isNotBlank()) {
             val updateTask = _editingTodo.value?.copy(title = title) ?: Todo(title = title)
             updateTask(updateTask)
             _editingTodo.value = null
-            _textTitle.value = ""
         }
     }
 
-    private fun updateTask(newTodo: Todo) {
+    fun updateTask(newTodo: Todo) {
         viewModelScope.launch {
             TodoRepository.update(newTodo)
         }
