@@ -23,6 +23,7 @@ class todoVM(private val TodoRepository: TodoRepository): ViewModel() {
     val editingTodo: StateFlow<Todo?> = _editingTodo.asStateFlow()
 
 
+
     fun updateTodoText(text: String) {
         _textTitle.value = text
     }
@@ -39,6 +40,7 @@ class todoVM(private val TodoRepository: TodoRepository): ViewModel() {
             val updateTask = _editingTodo.value?.copy(title = title) ?: Todo(title = title)
             updateTask(updateTask)
             _editingTodo.value = null
+            _textTitle.value = ""
         }
     }
 
@@ -51,6 +53,11 @@ class todoVM(private val TodoRepository: TodoRepository): ViewModel() {
     fun addTask(todo: Todo) {
         viewModelScope.launch {
             TodoRepository.insert(todo)
+        }
+    }
+    fun deleteTask(todo: Todo) {
+        viewModelScope.launch {
+            TodoRepository.delete(todo)
         }
     }
     init {
