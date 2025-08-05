@@ -1,19 +1,24 @@
 package com.example.todoapp.todolist
 
 import android.util.Log
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -46,55 +51,49 @@ fun TodoScreen(repository: TodoRepository) {
     val todoTitle by viewModel.text.collectAsState()
     val editingTodo by viewModel.editingTodo.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
+    val selectedTag by viewModel.selectedTag.collectAsState()
+    val tags by viewModel.tags.collectAsState()
 
 
-
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(id = R.string.app_name)) }
+    Scaffold(topBar = {
+        TopAppBar(
+            title = { Text(stringResource(id = R.string.app_name)) })
+    }, floatingActionButton = {
+        FloatingActionButton(
+            onClick = {
+                viewModel.updateTodoText("")
+                viewModel.startEditing()
+                showDialog = true
+            },
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = stringResource(id = R.string.add_task)
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { 
-                    viewModel.updateTodoText("")
-                    viewModel.startEditing()
-                    showDialog = true 
-                },
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add, 
-                    contentDescription = stringResource(id = R.string.add_task)
-                )
-            }
         }
-    ) { innerPadding ->
+    }) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-
             Spacer(modifier = Modifier.height(16.dp))
-            
             Log.d("TodoScreen", "editingTodo: $editingTodo")
-
             LazyColumn {
                 items(
-                    items = todos.sortedWith(compareBy ({it.isDone}, {it.id})),
-                    key = { todo -> todo.id }
-                    ) { todo ->
+                    items = todos.sortedWith(compareBy({ it.isDone }, { it.tags })),
+                    key = { todo -> todo.id }) { todo ->
                     CardItem(
+                        viewModel = viewModel,
                         todo = todo,
                         onDelete = { viewModel.deleteTask(todo) },
-                        onEdit = { 
+                        onEdit = {
                             viewModel.startEditing(todo)
                             showDialog = true
                         },
                         onDone = { viewModel.isCheckboxChecked(todo) }
                     )
+                    }
                 }
             }
             Log.d("ListTest", "ListTodo: $todos")
@@ -102,14 +101,14 @@ fun TodoScreen(repository: TodoRepository) {
 
         if (showDialog) {
             TaskInput(
-                onConfirm = { 
-                    viewModel.saveOrUpdateTask()
-                    showDialog = false
-                },
-                onDismiss = { 
+                onConfirm = {
+                viewModel.saveOrUpdateTask()
+                showDialog = false
+            },
+                onDismiss = {
                     viewModel.updateTodoText("")
                     viewModel.startEditing()
-                    showDialog = false 
+                    showDialog = false
                 },
                 initialText = todoTitle,
                 onTextChange = { viewModel.updateTodoText(it) },
@@ -117,7 +116,7 @@ fun TodoScreen(repository: TodoRepository) {
             )
         }
     }
-}
+
 
 @Preview
 @Composable
