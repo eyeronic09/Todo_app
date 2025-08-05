@@ -22,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -67,6 +68,12 @@ fun CardItem(
             )
 
             HorizontalDivider(modifier = Modifier.padding(top = 8.dp, bottom = 8.dp))
+
+            SuggestionChip(
+                onClick = { null },
+                label = { todo.tags?.let { Text(text = it) } },
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
             
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 DropdownMenuItem(
@@ -74,7 +81,7 @@ fun CardItem(
                     onClick = {
                         expanded = false
                         todo.tags = "Shopping"
-                        viewModel.updateSelectedTag("Shopping")
+                        viewModel.updateTask(todo.copy(tags = "Shopping"))
 
                     }
                 )
@@ -83,7 +90,7 @@ fun CardItem(
                     onClick = {
                         expanded = false
                         todo.tags = "Work"
-                        viewModel.updateSelectedTag("Work")
+                        viewModel.updateTask(todo.copy(tags = "Work"))
                     }
                 )
                 DropdownMenuItem(
@@ -91,7 +98,8 @@ fun CardItem(
                     onClick = {
                         expanded = false
                         todo.tags = "Personal"
-                        viewModel.updateSelectedTag("Personal")}
+                        viewModel.updateTask(todo.copy(tags = "Personal"))
+                    }
                 )
             }
             Log.d("Dropdown", "$expanded")
