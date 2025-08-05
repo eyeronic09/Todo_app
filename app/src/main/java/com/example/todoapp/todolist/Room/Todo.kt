@@ -8,7 +8,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "todo_TB")
 data class Todo(
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0,
+    var id: Long = 0,
     var title: String,
-    var isDone: Boolean = false
+    var isDone: Boolean = false,
+    var tags: String? = "All"
 )

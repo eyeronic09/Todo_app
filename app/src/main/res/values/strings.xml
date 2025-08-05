@@ -1,3 +1,17 @@
 <resources>
-    <string name="app_name">To do app</string>
+    <string name="app_name" translatable="false">To do app</string>
+    <string name="add_task" translatable="false">Add Task</string>
+    <string name="edit_task" translatable="false">Edit Task</string>
+    <string name="task_title" translatable="false">Task Title</string>
+    <string name="save" translatable="false">Save</string>
+    <string name="cancel" translatable="false">Cancel</string>
+    <string name="delete" translatable="false">Delete</string>
+    <string name="edit" translatable="false">Edit</string>
+    <string name="mark_complete" translatable="false">Mark as Complete</string>
+    <string name="mark_incomplete" translatable="false">Mark as Incomplete</string>
+    <string name="no_tasks" translatable="false">No tasks yet. Tap + to add one!</string>
+    <string name="task_added" translatable="false">Task added successfully</string>
+    <string name="task_updated" translatable="false">Task updated successfully</string>
+    <string name="task_deleted" translatable="false">Task deleted</string>
+    <string name="error_empty_task" translatable="false">Task title cannot be empty</string>
 </resources>

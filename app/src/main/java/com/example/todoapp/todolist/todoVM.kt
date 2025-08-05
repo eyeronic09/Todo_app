@@ -22,6 +22,17 @@ class todoVM(private val TodoRepository: TodoRepository): ViewModel() {
     private val _editingTodo = MutableStateFlow<Todo?>(null)
     val editingTodo: StateFlow<Todo?> = _editingTodo.asStateFlow()
 
+    private val _selectedTag = MutableStateFlow<String>("All")
+    val selectedTag: StateFlow<String?> = _selectedTag.asStateFlow()
+
+    private val _tags = MutableStateFlow(listOf("All" , "Work" , "Personal" , "Study"))
+    val tags: StateFlow<List<String>> = _tags.asStateFlow()
+
+
+    fun updateSelectedTag(tag: String) {
+        _selectedTag.value = tag
+    }
+
 
 
     fun updateTodoText(text: String) {
@@ -29,9 +40,9 @@ class todoVM(private val TodoRepository: TodoRepository): ViewModel() {
     }
 
 
-    fun startEditing(todo: Todo) {
+    fun startEditing(todo: Todo? = null) {
         _editingTodo.value = todo
-        _textTitle.value = todo.title
+        _textTitle.value = todo?.title ?: ""
     }
 
 
@@ -46,9 +57,26 @@ class todoVM(private val TodoRepository: TodoRepository): ViewModel() {
     fun saveOrUpdateTask() {
         val title = _textTitle.value
         if (title.isNotBlank()) {
-            val updateTask = _editingTodo.value?.copy(title = title) ?: Todo(title = title)
-            updateTask(updateTask)
+            val currentTag = selectedTag.value ?: "All"
+            val currentTodo = _editingTodo.value
+            
+            if (currentTodo != null) {
+                val updatedTodo = currentTodo.copy(
+                    title = title,
+                    tags = currentTag
+                )
+                updateTask(updatedTodo)
+            } else {
+                // Create new task
+                val newTodo = Todo(
+                    title = title,
+                    tags = currentTag
+                )
+                addTask(newTodo)
+            }
+            
             _editingTodo.value = null
+            _textTitle.value = ""
         }
     }
 
@@ -76,6 +104,4 @@ class todoVM(private val TodoRepository: TodoRepository): ViewModel() {
             }
         }
     }
-
-
 }
