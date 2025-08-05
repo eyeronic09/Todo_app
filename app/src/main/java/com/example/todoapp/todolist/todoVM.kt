@@ -25,13 +25,7 @@ class todoVM(private val TodoRepository: TodoRepository): ViewModel() {
     private val _selectedTag = MutableStateFlow<String>("All")
     val selectedTag: StateFlow<String?> = _selectedTag.asStateFlow()
 
-    private val _tags = MutableStateFlow(listOf("All"))
-    val tags: StateFlow<List<String>> = _tags.asStateFlow()
 
-
-    fun updateSelectedTag(tag: String) {
-        _selectedTag.value = tag
-    }
 
 
 
@@ -57,9 +51,8 @@ class todoVM(private val TodoRepository: TodoRepository): ViewModel() {
     fun saveOrUpdateTask() {
         val title = _textTitle.value
         if (title.isNotBlank()) {
-            val currentTag = selectedTag.value ?: "All"
+            val currentTag = selectedTag.value ?: ""
             val currentTodo = _editingTodo.value
-            
             if (currentTodo != null) {
                 val updatedTodo = currentTodo.copy(
                     title = title,

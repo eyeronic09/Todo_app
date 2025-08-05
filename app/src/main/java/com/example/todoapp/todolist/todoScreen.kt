@@ -51,8 +51,7 @@ fun TodoScreen(repository: TodoRepository) {
     val todoTitle by viewModel.text.collectAsState()
     val editingTodo by viewModel.editingTodo.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
-    val selectedTag by viewModel.selectedTag.collectAsState()
-    val tags by viewModel.tags.collectAsState()
+
 
 
     Scaffold(topBar = {
