@@ -42,27 +42,21 @@ android {
 
 dependencies {
 
-    val room_version = "2.7.2"
+    //viewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
 
-    implementation("androidx.room:room-runtime:$room_version")
+    //Corutines for async
 
-    // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
-    // See Add the KSP plugin to your project
-    kapt("androidx.room:room-compiler:$room_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-    // If this project only uses Java source, use the Java annotationProcessor
-    // No additional plugins are necessary
-    annotationProcessor("androidx.room:room-compiler:$room_version")
+    //room for database
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
 
-
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3") // Or latest
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3") // Or latest
-    implementation("androidx.activity:activity-compose:1.9.0")
-
-    implementation ("com.google.dagger:hilt-android:2.48")
-
-    // For ViewModel + Hilt
-    implementation ("androidx.hilt:hilt-navigation-compose:1.1.0")
+    // Koin
+    implementation("io.insert-koin:koin-android:3.5.6")
+    implementation("io.insert-koin:koin-androidx-compose:3.5.6")
 
 
     implementation(libs.androidx.core.ktx)
