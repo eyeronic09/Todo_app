@@ -5,6 +5,7 @@ import com.example.todoapp.HomeScreen.Data_layer.local.dao.model.TodoItem
 data class TodoState(
     val todos : List<TodoItem> = emptyList(),
     val newTodoTitle : String = "",
+    val onToggleDone: Boolean = true,
     val isLoading : Boolean = false,
     val errorMessage : String? = null
 )

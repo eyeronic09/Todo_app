@@ -14,6 +14,10 @@ class TodoRepositoryImpl(private val dataSource : TodoDataSource) : TodoReposito
         return dataSource.add(todo)
     }
 
+    override suspend fun onComplete(todo: TodoItem) {
+        return dataSource.onToggle(todo)
+    }
+
     override suspend fun deleteTodo(todo: TodoItem) {
         return dataSource.delete(todo)
     }

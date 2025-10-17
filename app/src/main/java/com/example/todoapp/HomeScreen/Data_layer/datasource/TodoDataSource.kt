@@ -7,4 +7,6 @@ interface TodoDataSource {
     suspend fun add(todo : TodoItem)
     suspend fun delete(todo : TodoItem)
     fun getAllTodo() : Flow<List<TodoItem>>
+
+    suspend fun onToggle(todo : TodoItem)
 }

@@ -13,11 +13,15 @@ class RoomTodoDataSource(private val dao : todoDao): TodoDataSource {
     }
 
     override suspend fun delete(todo: TodoItem) {
-      return  dao.Delete(todo)
+      return  dao.delete(todo)
     }
 
     override fun getAllTodo(): Flow<List<TodoItem>> {
         return dao.GetallTodos()
+    }
+
+    override suspend fun onToggle(todo: TodoItem) {
+        return dao.updateTodo(todo)
     }
 
 }

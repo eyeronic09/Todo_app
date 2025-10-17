@@ -1,6 +1,7 @@
 package com.example.todoapp.HomeScreen.Presentation_layer.ui.Home
 
 import android.util.Log
+import androidx.compose.ui.window.isPopupLayout
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.HomeScreen.Data_layer.local.dao.model.TodoItem
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 class TodoViewModel(private val repository: TodoRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(TodoState())
     val uiState: StateFlow<TodoState> = _uiState.asStateFlow()
+
 
     init {
         viewModelScope.launch {
@@ -35,8 +37,8 @@ class TodoViewModel(private val repository: TodoRepository) : ViewModel() {
                                 isDone = false
                             )
                         )
-
-
+                        // Clear the input field after adding
+                        _uiState.update { it.copy(newTodoTitle = "") }
                     }
                 }
             }
@@ -49,11 +51,9 @@ class TodoViewModel(private val repository: TodoRepository) : ViewModel() {
 
             is TodoEvent.OnToggleDone -> {
                 viewModelScope.launch {
-//                    repository.(
-//                        event.todoItem.copy(
-//                            isDone = !event.todoItem.isDone
-//                        )
-//                    )
+
+                    repository.onComplete(event.todoItem.copy(isDone = !event.todoItem.isDone))
+
                 }
             }
 

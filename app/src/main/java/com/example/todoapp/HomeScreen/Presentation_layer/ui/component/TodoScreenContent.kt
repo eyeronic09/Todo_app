@@ -64,7 +64,6 @@ fun TodoScreenContent(
         if (state.isLoading) {
             CircularProgressIndicator()
         } else {
-            Log.d("TextFeild","${state.newTodoTitle}")
             LazyColumn {
                 items(state.todos) { todo ->
                     Row(
@@ -79,9 +78,9 @@ fun TodoScreenContent(
                         )
                         Text(
                             text = todo.title,
-                            style = if (todo.isDone) TextStyle(
+                            style = if (todo.isDone){ TextStyle(
                                 textDecoration = TextDecoration.LineThrough
-                            ) else {
+                            ) }else {
                                 TextStyle.Default
                             },
                             modifier = Modifier.weight(1f)
