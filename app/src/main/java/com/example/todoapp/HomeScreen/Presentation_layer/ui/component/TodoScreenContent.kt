@@ -3,6 +3,7 @@ package com.example.todoapp.HomeScreen.Presentation_layer.ui.component
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
@@ -44,7 +46,7 @@ fun TodoScreenContent(
     ) {
         OutlinedTextField(
             value = state.newTodoTitle,
-            onValueChange = { onEvent(TodoEvent.OntitleChange(it)) },
+            onValueChange = { onEvent(TodoEvent.OnTitleChange(it)) },
             label = { Text("New Todos") },
             modifier = Modifier.fillMaxWidth(),
         )
@@ -63,7 +65,36 @@ fun TodoScreenContent(
 
         if (state.isLoading) {
             CircularProgressIndicator()
-        } else {
+        } else if (state.isEditing) {
+            Column {
+                OutlinedTextField(
+                    value = state.editTitle,
+                    onValueChange = { onEvent(TodoEvent.OnUpdateTitle(it)) },
+                    label = { Text("Edit Todo") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Button(
+                        onClick = { onEvent(TodoEvent.OnCancelEdit) },
+                        modifier = Modifier.padding(end = 8.dp)
+                    ) {
+                        Text("Cancel")
+                    }
+                    Button(
+                        onClick = { onEvent(TodoEvent.OnSaveEdit) },
+                        enabled = state.editTitle.isNotBlank()
+                    ) {
+                        Text("Save")
+                    }
+                }
+            }
+        }
+
+        else {
             LazyColumn {
                 items(state.todos) { todo ->
                     Row(
@@ -87,6 +118,11 @@ fun TodoScreenContent(
                         )
                         IconButton(onClick = { onEvent(TodoEvent.OnDeleteTodo(todo)) }) {
                             Icon(Icons.Default.Delete, contentDescription = "Delete Todo")
+                        }
+                        IconButton(
+                            onClick = {onEvent(TodoEvent.OnEditTodo(todo))}
+                        ) {
+                            Icon(Icons.Default.Edit , contentDescription = null)
                         }
                     }
                 }

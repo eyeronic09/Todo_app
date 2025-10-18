@@ -11,4 +11,6 @@ interface TodoRepository {
 
 
     suspend fun deleteTodo(todo: TodoItem)
+
+    suspend fun onTitleChange(todoItem: TodoItem)
 }

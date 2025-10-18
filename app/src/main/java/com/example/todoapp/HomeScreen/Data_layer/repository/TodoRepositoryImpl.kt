@@ -22,4 +22,8 @@ class TodoRepositoryImpl(private val dataSource : TodoDataSource) : TodoReposito
         return dataSource.delete(todo)
     }
 
+    override suspend fun onTitleChange(todoItem: TodoItem) {
+        return dataSource.onToggle(todoItem)
+    }
+
 }

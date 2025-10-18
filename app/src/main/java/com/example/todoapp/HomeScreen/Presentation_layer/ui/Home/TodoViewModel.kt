@@ -51,14 +51,61 @@ class TodoViewModel(private val repository: TodoRepository) : ViewModel() {
 
             is TodoEvent.OnToggleDone -> {
                 viewModelScope.launch {
-
                     repository.onComplete(event.todoItem.copy(isDone = !event.todoItem.isDone))
 
                 }
             }
+            is TodoEvent.OnEditTodo -> {
+                viewModelScope.launch {
+                    _uiState.update {
+                        it.copy(
+                            isEditing = true,
+                            currentEditTodo = event.todoItem,
+                            editTitle = event.todoItem.title
+                        )
 
-            is TodoEvent.OntitleChange -> {
-                _uiState.update { it.copy(newTodoTitle = event.title) }
+                    }
+
+                }
+                Log.d("new " , _uiState.value.todos.toString())
+
+            }
+
+            TodoEvent.OnCancelEdit -> TODO()
+            TodoEvent.OnSaveEdit -> {
+                viewModelScope.launch {
+                    val currentEditTodo = _uiState.value.currentEditTodo
+                    val newTitle = _uiState.value.editTitle
+
+                    val updatedTodo = currentEditTodo!!.copy(title = newTitle)
+                    repository.onTitleChange(updatedTodo)
+
+                    _uiState.update {
+                        it.copy(
+                            isEditing = false,
+                            currentEditTodo = null,
+                            editTitle = ""
+                        )
+                    }
+
+                }
+
+            }
+            is TodoEvent.OnTitleChange -> {
+                _uiState.update {
+                    it.copy(newTodoTitle = event.title)
+                }
+            }
+
+            is TodoEvent.OnUpdateTitle -> {
+                _uiState.update {
+                    it.copy(
+                        isEditing = true,
+                        currentEditTodo = _uiState.value.currentEditTodo,
+                        editTitle = event.newTitle,
+
+                    )
+                }
             }
         }
     }
